@@ -50,8 +50,8 @@ function round(value, decimals) {
 			context.fillText("speed: " + this.$speed+ " m/s", (pos.x + 5) * GAME_SCALE, (pos.y + 1) * GAME_SCALE);
 	}
 
-	var ballon = world.createEntity({
-		name: "ballon", 
+	var target = world.createEntity({
+		name: "target", 
 		shape: "circle", 
 		radius: .3,
 		density: 2,
@@ -77,8 +77,8 @@ function round(value, decimals) {
 		}
 	});
 
-	ballon.setForce( "moving", ballon.$mass * GAME_GRAVITY, 0 );
-	ballon.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
+	target.setForce( "moving", target.$mass * GAME_GRAVITY, 0 );
+	target.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
 	
 	var MAX_FORCE = 40;
 	var MIN_FORCE = 2;
