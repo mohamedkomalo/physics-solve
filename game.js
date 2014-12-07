@@ -69,7 +69,7 @@ function round(value, decimals) {
 			}
 		},
 		onImpact:function(entity){
-			if(entity.name() == "nail"){
+			if(entity.name() == "rocket"){
 				this.clearVelocity("moving");
 				this.clearForce("moving");
 				this.$fellOff = true;
@@ -128,8 +128,8 @@ function round(value, decimals) {
 		}
 	});
 
-	nailTemplate = {
-		name: "nail", 
+	rocketTemplate = {
+		name: "rocket", 
 		shape: "polygon",
 		points: [{x: 0.5, y: -1}, {x: 1, y: 0}, {x: 0, y: 0}],
 		//radius: .3,
@@ -165,12 +165,12 @@ function round(value, decimals) {
 		}
 	};
 
-	var nail = world.createEntity(nailTemplate);
+	var rocket = world.createEntity(rocketTemplate);
 
 	world.onTick(function(){
-		if(nail.position().y < -2){
-			nail.destroy()
-			nail = world.createEntity(nailTemplate);
+		if(rocket.position().y < -2){
+			rocket.destroy()
+			rocket = world.createEntity(rocketTemplate);
 		}
 	});
 
@@ -180,10 +180,4 @@ function round(value, decimals) {
 		var t = failTrials > -1 ? failTrials : 0;
 		context.fillText("Failed Trials: " + t, 22, 10);
 	});
-
-
-	//nail.applyImpulse(132, 0);
-	//nail.setVelocity("to kill", 12.5, 0);
-	//nail.applyImpulse(141.3, 0);
-
 })()
