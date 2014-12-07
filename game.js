@@ -10,21 +10,52 @@ function round(value, decimals) {
 	var GAME_SIZE = {width:700, height: 500};
 	var GAME_SCALE = 10;
 	var GAME_GRAVITY = 9.8;
+	var GAME_END = false;
 
-	var currentLevel = {
-		name: "Bomba level",
+	var levels = [{
+		name: "Bomba - Easy level",
 		targets: [
-		{negative: true, speed:10, direction: -90, x: 12, y:10, radius: .3},
-		{negative: false, speed:10, direction: 90, x: 50, y:20, radius: .3},
-		{negative: true, speed:10, direction:-90, x: 40, y:30, radius: .3}],
+		{negative: false, speed:10, direction: -90, x: 12, y:10, radius: .5},
+		{negative: true, speed:10, direction: 90, x: 35, y:20, radius: .5}
+		],
 		rocket: {
-			minForce: 30,
-			maxForce: 2,
+			maxForce: 30,
+			minForce: 2,
 			density: .4
 		}
-	}
+	},
+	{
+		name: "Cromba - Medium level",
+		targets: [
+		{negative: false, speed:15, direction: -90, x: 12, y:10, radius: .4},
+		{negative: true, speed:10, direction: 90, x: 50, y:20, radius: .5},
+		{negative: true, speed:20, direction:-90, x: 40, y:30, radius: .5}],
+		rocket: {
+			maxForce: 30,
+			minForce: 2,
+			density: .4
+		}
+	},
+	{
+		name: "Zomba - Hard level",
+		targets: [
+		{negative: false, speed:10, direction: -90, x: 12, y:10, radius: .3},
+		{negative: true, speed:20, direction: 90, x: 50, y:20, radius: .5},
+		{negative: true, speed:30, direction:-90, x: 40, y:30, radius: .6},
+		{negative: true, speed:40, direction:90, x: 13, y:25, radius: .5}
+		],
+		rocket: {
+			maxForce: 30,
+			minForce: 2,
+			density: .4
+		}
+	}];
+
+	var nextLevelIndex = 0;
 	
 	var failTrials = -1;
+	var startTime = new Date().getTime();
+	var endTime;
 
 	var canvas = document.getElementById('game');
 
@@ -38,6 +69,9 @@ function round(value, decimals) {
 	var world = boxbox.createWorld(canvas, worldConfig);
 
 	var createNewLevel = function(level){
+
+		var needRestartLevel = false;
+		var needNextLevel = false;
 
 		var boundaryTemplate = {
 			name: "boundary",
@@ -65,8 +99,19 @@ function round(value, decimals) {
 				context.fillText("speed: " + this.$speed+ " m/s", (pos.x + 5) * GAME_SCALE, (pos.y + 1) * GAME_SCALE);
 		}
 
+		var negativeTargetImpact = function(entity){
+			if(entity.name() == "rocket"){
+				needRestartLevel = true;
+			}
+		};
+
+		var positiveTargetImpact = function(entity){
+			if(entity.name() == "rocket"){
+				needNextLevel = true;
+			}
+		}
+
 		var targetTemplate = {
-			name: "misdirectionTarget", 
 			shape: "circle",
 			density: 2,
 			$fellOff: false,
@@ -75,27 +120,18 @@ function round(value, decimals) {
 				this.setForce( "moving", this.$mass * GAME_GRAVITY, 0 );
 				this.setVelocity( "moving", this.$speed, this.$direction);
 			},
-			onStartContact: function(entity){
+			onImpact: function(entity){
 				if(entity.name() == "boundary" && this.$fellOff === false){
 					this.clearVelocity("moving");
 					this.$direction *= -1;
 					this.setVelocity( "moving", this.$speed, this.$direction);
 				}
 			},
-			onImpact:function(entity){
-				if(entity.name() == "rocket"){
-					setTimeout(function(){
-							world.pause();
-							world.cleanup(worldConfig);
-							createNewLevel();
-					}, 1);
-				}
-			}
 		};
 
 		for(var i=0; i<level.targets.length; i++){
 			world.createEntity(targetTemplate, {
-				name: level.targets[i].negative ? "misdirectionTarget" : "target",
+				name: level.targets[i].negative ? "negativeTarget" : "target",
 				color: level.targets[i].negative ? "red" : "lightblue",
 				x: level.targets[i].x,
 				y: level.targets[i].y,
@@ -103,6 +139,7 @@ function round(value, decimals) {
 				$mass: targetTemplate.density * ((22 / 7) * (level.targets[i].radius * level.targets[i].radius)),
 				$speed: level.targets[i].speed,
 				$direction: level.targets[i].direction,
+				onStartContact: level.targets[i].negative ? negativeTargetImpact : positiveTargetImpact,
 
 			})
 		}
@@ -195,7 +232,6 @@ function round(value, decimals) {
 					this.$thrown = false;
 				}
 				failTrials++;
-				console.log(failTrials);
 			}
 		};
 
@@ -206,15 +242,80 @@ function round(value, decimals) {
 				rocket.destroy()
 				rocket = world.createEntity(rocketTemplate);
 			}
+
+			if(needRestartLevel){
+				setTimeout(restartLevel(), 10);
+			}
+
+			if(needNextLevel){
+				setTimeout(moveToNextLevel(), 10);
+			}
 		});
 
 		world.onRender(function(context){
 			context.fillStyle = "black";
 			context.font="13px Verdana";
-			var t = failTrials > -1 ? failTrials : 0;
-			context.fillText("Failed Trials: " + t, 22, 10);
+			var trials = getFailTrials();
+			var elapsedTime = getElapsedTime();
+
+			context.fillText("Time Elapsed: " + elapsedTime + ", Failed Trials: " + trials, 22, 10);
+
+			if(GAME_END){
+				context.fillStyle="rgba(0,0,0,0.7)";
+				context.fillRect(0, 0, GAME_SIZE.width, GAME_SIZE.height);
+
+				context.fillStyle = "white";
+				context.font="23px Verdana";
+				var x = GAME_SIZE.width/2 - 230;
+				var y = GAME_SIZE.height/2 - 60;
+				context.fillText("Congratualations, you have successfully", x, y);
+				context.fillText('finished all the levels within time: ' + elapsedTime, x, y + 30);
+				context.fillText('and fail trials: ' + trials, x, y + 60);
+			}
 		});
+
 	};
 
-	createNewLevel(currentLevel);
+	function restartLevel(){
+		world.pause();
+		world.cleanup(worldConfig);
+		createNewLevel(levels[nextLevelIndex-1]);
+	}
+
+	function moveToNextLevel(){
+		if(GAME_END) return;
+		if(nextLevelIndex < levels.length){
+			world.pause();
+			world.cleanup(worldConfig);
+			createNewLevel(levels[nextLevelIndex]);
+			nextLevelIndex++;
+			console.log(nextLevelIndex);
+		}
+		else{
+			endGame();
+		}
+	}
+
+	function getElapsedTime(){
+		var myEnd = endTime;
+		if(!myEnd){
+			myEnd = new Date().getTime();
+		}
+		var seconds = round(((myEnd - startTime)/1000), 0);
+		var minutes = round(((myEnd - startTime)/1000)/60, 0);
+		return minutes+":"+seconds;
+	}
+
+	function getFailTrials(){
+		return failTrials > -1 ? failTrials : 0;
+	}
+
+	function endGame(){
+			endTime = new Date().getTime();
+			GAME_END = true;
+			world.pause();
+	}
+
+	moveToNextLevel();
+
 })()
