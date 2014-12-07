@@ -42,6 +42,7 @@
 		shape: "circle", 
 		radius: .3,
 		density: 2,
+		$mass: 2 * ((22 / 7) * (.3 * .3)),
 		x: 2,
 		y: 5,
 		$fellOff: false,
@@ -62,11 +63,10 @@
 		}
 	});
 
-	var upthrustForce = (2 * (22 / 7) * (.3 * .3)) * 9.8;
-	ballon.setForce( "moving", upthrustForce, 0 );
+	ballon.setForce( "moving", ballon.$mass * 9.8, 0 );
 	ballon.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
 	
-	var MAX_FORCE = 100;
+	var MAX_FORCE = 40;
 
 	var thrower = world.createEntity({
 		name: "thrower",
@@ -76,10 +76,9 @@
 		height: 7,
 		x: 30,
 		y: 48,
-		$force:60,
+		$force:MAX_FORCE,
 		onKeydown: function(event){
-			console.log(event);
-			if(this.$force < 100){
+			if(this.$force < MAX_FORCE){
 				if(event.keyCode === 38){ //UP
 					this.$force += 1;
 				}
@@ -113,20 +112,37 @@
 		}
 	});
 
-	var nail = world.createEntity({
+	nailTemplate = {
 		name: "nail", 
 		shape: "circle", 
 		radius: .3,
 		density: 2,
+		$mass: 2 * ((22 / 7) * (.3 * .3)),
 		x:30,
-		y:41,
+		y:30,
 		$thrown:false,
 		onRender: renderEntityPositionFunction,
 		onKeydown: function(event){
-			if(this.$thrown === false){
-				this.applyImpulse(10, 0);
-				this.$thrown = true;
+			if(event.keyCode === 32){
+				if(this.$thrown === false){
+					this.applyImpulse(thrower.$force, 0);
+					this.$thrown = true;
+				}
 			}
+		},
+		onStartContact: function(entity){
+			if(entity.name() === "thrower"){
+				this.$thrown = false;
+			}
+		}
+	};
+
+	var nail = world.createEntity(nailTemplate);
+
+	world.onTick(function(){
+		if(nail.position().y < -2){
+			nail.destroy()
+			nail = world.createEntity(nailTemplate);
 		}
 	});
 
