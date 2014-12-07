@@ -4,9 +4,19 @@
 </head>
 	<script src="Box2dWeb-2.1.a.3.min.js"></script>
 	<script src="boxbox.min.js"></script>
+
+	<style>
+	.centered {
+	  position: fixed;
+	  top: 50%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	}
+	</style>
 <body>
-	<canvas id="game">
+	<canvas id="game" class="centered">
 		Browser must support html5 canvas
 	</canvas>
+	<script src="game.js"></script>
 </body>
 </html>
