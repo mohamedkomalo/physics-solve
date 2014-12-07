@@ -1,3 +1,7 @@
+var KEYCODES_ARROWS_UP = 38;
+var KEYCODES_ARROWS_DOWN = 40;
+var KEYCODES_SPACE = 32;
+
 function round(value, decimals) {
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
@@ -7,10 +11,14 @@ function round(value, decimals) {
 	var GAME_SCALE = 10;
 	var GAME_GRAVITY = 9.8;
 
-	var canvas = document.getElementById('game');
+	var TARGET_SPEED = 20;
+	
+	var MAX_ROCKET_FORCE = 30;
+	var MIN_ROCKET_FORCE = 2;
+	
 	var failTrials = -1;
 
-	//var context = canvas.getContext('2d');
+	var canvas = document.getElementById('game');
 
 	canvas.width = GAME_SIZE.width;
 	canvas.height = GAME_SIZE.height;
@@ -34,10 +42,6 @@ function round(value, decimals) {
 	var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 69 });
 	var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 49 });
 
-	var BALLOON_SPEED = 20;
-	var BALLOON_DIRECTION = 90;
-
-
 	var renderEntityPositionFunction = function(context){
 		var pos = this.position();
 		//console.log(pos);
@@ -59,13 +63,18 @@ function round(value, decimals) {
 		x: 2,
 		y: 10,
 		$fellOff: false,
-		$speed: BALLOON_SPEED,
+		$speed: TARGET_SPEED,
+		$direction: 90,
 		onRender: renderEntityPositionFunction,
+		init: function(){
+			this.setForce( "moving", this.$mass * GAME_GRAVITY, 0 );
+			this.setVelocity( "moving", this.$speed, this.$direction);
+		},
 		onStartContact: function(entity){
 			if(entity.name() == "boundary" && this.$fellOff === false){
 				this.clearVelocity("moving");
-				BALLOON_DIRECTION *= -1;
-				this.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
+				this.$direction *= -1;
+				this.setVelocity( "moving", this.$speed, this.$direction);
 			}
 		},
 		onImpact:function(entity){
@@ -77,32 +86,37 @@ function round(value, decimals) {
 		}
 	});
 
-	target.setForce( "moving", target.$mass * GAME_GRAVITY, 0 );
-	target.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
-	
-	var MAX_FORCE = 40;
-	var MIN_FORCE = 2;
 
-	var thrower = world.createEntity({
-		name: "thrower",
+	var launcher = world.createEntity({
+		name: "launcher",
 		shape: "square",
 		color: "black",
 		width: 2,
 		height: 7,
 		x: 35.5,
 		y: 48,
-		$force:MAX_FORCE,
+		$force:MAX_ROCKET_FORCE,
 		onKeydown: function(event){
-			console.log(event);
-			if(this.$force < MAX_FORCE){
-				if(event.keyCode === 38){ //UP
-					this.$force += 1;
+			if(event.keyCode === KEYCODES_ARROWS_UP){ //UP
+				if(this.$force < MAX_ROCKET_FORCE){
+					if(event.ctrlKey){
+						this.$force += 0.1;
+						this.$force = round(this.$force, 1);
+					}
+					else{
+						this.$force += 1;
+					}
 				}
 			}
-			
-			if(this.$force > MIN_FORCE){
-				if(event.keyCode === 40){ //DOWN
-					this.$force -= 1;
+			else if(event.keyCode === KEYCODES_ARROWS_DOWN){ //DOWN
+				if(this.$force > MIN_ROCKET_FORCE){
+					if(event.ctrlKey){
+						this.$force -= 0.1;
+						this.$force = round(this.$force, 1);
+					}
+					else{
+						this.$force -= 1;
+					}
 				}
 			}
 		},
@@ -119,7 +133,7 @@ function round(value, decimals) {
 			// console.log(size);
 
 			context.fillStyle = "grey";
-			context.fillRect(x * GAME_SCALE, (y + (1-this.$force/MAX_FORCE) * height) * GAME_SCALE, width * GAME_SCALE, (this.$force/MAX_FORCE) * height * GAME_SCALE);
+			context.fillRect(x * GAME_SCALE, (y + (1-this.$force/MAX_ROCKET_FORCE) * height) * GAME_SCALE, width * GAME_SCALE, (this.$force/MAX_ROCKET_FORCE) * height * GAME_SCALE);
 
 			var powerTextX = x + width + 1;
 			var powerTextY = y + height/2;
@@ -148,16 +162,16 @@ function round(value, decimals) {
 			}
 		},
 		onKeydown: function(event){
-			if(event.keyCode === 32){
+			if(event.keyCode === KEYCODES_SPACE){
 				if(this.$thrown === false){
-					console.log(thrower.$force);
-					this.setForce("upward", thrower.$force, 0);
+					console.log(launcher.$force);
+					this.setForce("upward", launcher.$force, 0);
 					this.$thrown = true;
 				}
 			}
 		},
 		onStartContact: function(entity){
-			if(entity.name() === "thrower"){
+			if(entity.name() === "launcher"){
 				this.$thrown = false;
 			}
 			failTrials++;
