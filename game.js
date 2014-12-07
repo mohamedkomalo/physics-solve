@@ -258,7 +258,7 @@ function round(value, decimals) {
 			var trials = getFailTrials();
 			var elapsedTime = getElapsedTime();
 
-			context.fillText("Time Elapsed: " + elapsedTime + ", Failed Trials: " + trials, 22, 10);
+			context.fillText("Time Elapsed: " + elapsedTime + ", Failed Trials: " + trials + ", Level " + nextLevelIndex + ": " + level.name, 22, 10);
 
 			if(GAME_END){
 				context.fillStyle="rgba(0,0,0,0.7)";
