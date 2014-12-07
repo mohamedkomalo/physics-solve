@@ -101,22 +101,22 @@ function round(value, decimals) {
 				if(this.$force < MAX_ROCKET_FORCE){
 					if(event.ctrlKey){
 						this.$force += 0.1;
-						this.$force = round(this.$force, 1);
 					}
 					else{
 						this.$force += 1;
 					}
+					this.$force = round(this.$force, 1);
 				}
 			}
 			else if(event.keyCode === KEYCODES_ARROWS_DOWN){ //DOWN
 				if(this.$force > MIN_ROCKET_FORCE){
 					if(event.ctrlKey){
 						this.$force -= 0.1;
-						this.$force = round(this.$force, 1);
 					}
 					else{
 						this.$force -= 1;
 					}
+					this.$force = round(this.$force, 1);
 				}
 			}
 		},
