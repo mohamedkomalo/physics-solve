@@ -3,6 +3,7 @@
 
 
 	var canvas = document.getElementById('game');
+	//var context = canvas.getContext('2d');
 
 	canvas.width = GAME_SIZE.width;
 	canvas.height = GAME_SIZE.height;
@@ -26,6 +27,16 @@
 	var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 69 });
 	var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 49 });
 
+	var BALLOON_SPEED = 10;
+	var BALLOON_DIRECTION = 90;
+
+
+	var renderEntityPositionFunction = function(context){
+		var pos = this.position();
+		//console.log(pos);
+		context.fillText("(" + parseInt(pos.x) + "," + parseInt(pos.y) + ")", pos.x * 10, pos.y * 10);
+	}
+
 	var ballon = world.createEntity({
 		name: "ballon", 
 		shape: "circle", 
@@ -33,18 +44,25 @@
 		density: 2,
 		x:10,
 		y:5,
+		onRender: renderEntityPositionFunction,
+		onStartContact: function(entity){
+			if(entity.name() == "boundary"){
+				this.clearVelocity("moving");
+				BALLOON_DIRECTION *= -1;
+				this.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
+			}
+		},
 		onImpact:function(entity){
 			if(entity.name() == "nail"){
 				this.clearVelocity("moving");
 				this.clearForce("moving");
-				console.log('done');
 			}
 		}
 	});
 
-	var upthrustForce = (2 * (22 / 7) * (.1 * .1)) * 9.8;
+	var upthrustForce = (2 * (22 / 7) * (.3 * .3)) * 9.8;
 	ballon.setForce( "moving", upthrustForce, 0 );
-	ballon.setVelocity( "moving", 20, 90 );
+	 ballon.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
 	
 	var nail = world.createEntity({
 		name: "nail", 
@@ -54,6 +72,7 @@
 		y:30,
 		x:30,
 		$thrown: false,
+		onRender: renderEntityPositionFunction,
 		onKeydown: function(event){
 			if(this.$thrown === false){
 				this.applyImpulse(10, 0);
