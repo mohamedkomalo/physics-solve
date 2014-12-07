@@ -76,18 +76,18 @@
 		height: 7,
 		x: 30,
 		y: 48,
-		$power:60,
+		$force:60,
 		onKeydown: function(event){
 			console.log(event);
-			if(this.$power < 100){
+			if(this.$force < 100){
 				if(event.keyCode === 38){ //UP
-					this.$power += 1;
+					this.$force += 1;
 				}
 			}
 			
-			if(this.$power > 1){
+			if(this.$force > 1){
 				if(event.keyCode === 40){ //DOWN
-					this.$power -= 1;
+					this.$force -= 1;
 				}
 			}
 		},
@@ -104,12 +104,12 @@
 			// console.log(size);
 
 			context.fillStyle = "grey";
-			context.fillRect(x * GAME_SCALE, (y + (1-this.$power/MAX_FORCE) * height) * GAME_SCALE, width * GAME_SCALE, (this.$power/MAX_FORCE) * height * GAME_SCALE);
+			context.fillRect(x * GAME_SCALE, (y + (1-this.$force/MAX_FORCE) * height) * GAME_SCALE, width * GAME_SCALE, (this.$force/MAX_FORCE) * height * GAME_SCALE);
 
 			var powerTextX = x + width + 1;
 			var powerTextY = y + height/2;
 
-			context.fillText(this.$power + "N", powerTextX * GAME_SCALE, powerTextY * GAME_SCALE);
+			context.fillText(this.$force + "N", powerTextX * GAME_SCALE, powerTextY * GAME_SCALE);
 		}
 	});
 
@@ -120,7 +120,7 @@
 		density: 2,
 		x:30,
 		y:41,
-		$thrown: false,
+		$thrown:false,
 		onRender: renderEntityPositionFunction,
 		onKeydown: function(event){
 			if(this.$thrown === false){
