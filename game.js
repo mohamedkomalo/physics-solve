@@ -11,10 +11,16 @@ function round(value, decimals) {
 	var GAME_SCALE = 10;
 	var GAME_GRAVITY = 9.8;
 
-	var TARGET_SPEED = 10;
+	var TARGETS = [
+		{negative: true, speed:10, direction: -90, x: 12, y:10, radius: .3},
+		{negative: false, speed:10, direction: 90, x: 50, y:20, radius: .3},
+		{negative: true, speed:10, direction:-90, x: 40, y:30, radius: .3}];
 	
 	var MAX_ROCKET_FORCE = 30;
 	var MIN_ROCKET_FORCE = 2;
+	var ROCKET_DENSITY = .4;
+
+
 	
 	var failTrials = -1;
 
@@ -59,16 +65,9 @@ function round(value, decimals) {
 
 		var targetTemplate = {
 			name: "misdirectionTarget", 
-			shape: "circle", 
-			color: "red", 
-			radius: .3,
+			shape: "circle",
 			density: 2,
-			$mass: 2 * ((22 / 7) * (.3 * .3)),
-			x: 2,
-			y: 10,
 			$fellOff: false,
-			$speed: TARGET_SPEED,
-			$direction: 90,
 			onRender: renderEntityPositionFunction,
 			init: function(){
 				this.setForce( "moving", this.$mass * GAME_GRAVITY, 0 );
@@ -92,10 +91,19 @@ function round(value, decimals) {
 			}
 		};
 
-		var target = world.createEntity(targetTemplate, {x: 50, y:20, $direction: -90});
-		var target = world.createEntity(targetTemplate, {x: 40, y:30});
-		var target = world.createEntity(targetTemplate, {name: "target", color: "lightblue"});
+		for(var i=0; i<TARGETS.length; i++){
+			world.createEntity(targetTemplate, {
+				name: TARGETS[i].negative ? "misdirectionTarget" : "target",
+				color: TARGETS[i].negative ? "red" : "lightblue",
+				x: TARGETS[i].x,
+				y: TARGETS[i].y,
+				radius: TARGETS[i].radius,
+				$mass: targetTemplate.density * ((22 / 7) * (TARGETS[i].radius * TARGETS[i].radius)),
+				$speed: TARGETS[i].speed,
+				$direction: TARGETS[i].direction,
 
+			})
+		}
 
 		var launcher = world.createEntity({
 			name: "launcher",
@@ -158,8 +166,8 @@ function round(value, decimals) {
 			shape: "polygon",
 			points: [{x: 0.5, y: -1}, {x: 1, y: 0}, {x: 0, y: 0}],
 			//radius: .3,
-			density: .4,
-			$mass: .4 * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
+			density: ROCKET_DENSITY,
+			$mass: ROCKET_DENSITY * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
 			x:35,
 			y:36,
 			$thrown:true,
