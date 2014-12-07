@@ -11,16 +11,18 @@ function round(value, decimals) {
 	var GAME_SCALE = 10;
 	var GAME_GRAVITY = 9.8;
 
-	var TARGETS = [
+	var currentLevel = {
+		name: "Bomba level",
+		targets: [
 		{negative: true, speed:10, direction: -90, x: 12, y:10, radius: .3},
 		{negative: false, speed:10, direction: 90, x: 50, y:20, radius: .3},
-		{negative: true, speed:10, direction:-90, x: 40, y:30, radius: .3}];
-	
-	var MAX_ROCKET_FORCE = 30;
-	var MIN_ROCKET_FORCE = 2;
-	var ROCKET_DENSITY = .4;
-
-
+		{negative: true, speed:10, direction:-90, x: 40, y:30, radius: .3}],
+		rocket: {
+			minForce: 30,
+			maxForce: 2,
+			density: .4
+		}
+	}
 	
 	var failTrials = -1;
 
@@ -35,7 +37,7 @@ function round(value, decimals) {
 	};
 	var world = boxbox.createWorld(canvas, worldConfig);
 
-	var createNewLevel = function(){
+	var createNewLevel = function(level){
 
 		var boundaryTemplate = {
 			name: "boundary",
@@ -91,16 +93,16 @@ function round(value, decimals) {
 			}
 		};
 
-		for(var i=0; i<TARGETS.length; i++){
+		for(var i=0; i<level.targets.length; i++){
 			world.createEntity(targetTemplate, {
-				name: TARGETS[i].negative ? "misdirectionTarget" : "target",
-				color: TARGETS[i].negative ? "red" : "lightblue",
-				x: TARGETS[i].x,
-				y: TARGETS[i].y,
-				radius: TARGETS[i].radius,
-				$mass: targetTemplate.density * ((22 / 7) * (TARGETS[i].radius * TARGETS[i].radius)),
-				$speed: TARGETS[i].speed,
-				$direction: TARGETS[i].direction,
+				name: level.targets[i].negative ? "misdirectionTarget" : "target",
+				color: level.targets[i].negative ? "red" : "lightblue",
+				x: level.targets[i].x,
+				y: level.targets[i].y,
+				radius: level.targets[i].radius,
+				$mass: targetTemplate.density * ((22 / 7) * (level.targets[i].radius * level.targets[i].radius)),
+				$speed: level.targets[i].speed,
+				$direction: level.targets[i].direction,
 
 			})
 		}
@@ -113,10 +115,10 @@ function round(value, decimals) {
 			height: 7,
 			x: 35.5,
 			y: 48,
-			$force:MAX_ROCKET_FORCE,
+			$force:level.rocket.maxForce,
 			onKeydown: function(event){
 				if(event.keyCode === KEYCODES_ARROWS_UP){ //UP
-					if(this.$force < MAX_ROCKET_FORCE){
+					if(this.$force < level.rocket.maxForce){
 						if(event.ctrlKey){
 							this.$force += 0.1;
 						}
@@ -127,7 +129,7 @@ function round(value, decimals) {
 					}
 				}
 				else if(event.keyCode === KEYCODES_ARROWS_DOWN){ //DOWN
-					if(this.$force > MIN_ROCKET_FORCE){
+					if(this.$force > level.rocket.minForce){
 						if(event.ctrlKey){
 							this.$force -= 0.1;
 						}
@@ -151,7 +153,7 @@ function round(value, decimals) {
 				// console.log(size);
 
 				context.fillStyle = "white";
-				context.fillRect(x * GAME_SCALE, (y + (1-this.$force/MAX_ROCKET_FORCE) * height) * GAME_SCALE, width * GAME_SCALE, (this.$force/MAX_ROCKET_FORCE) * height * GAME_SCALE);
+				context.fillRect(x * GAME_SCALE, (y + (1-this.$force/level.rocket.maxForce) * height) * GAME_SCALE, width * GAME_SCALE, (this.$force/level.rocket.maxForce) * height * GAME_SCALE);
 
 				var powerTextX = x + width + 1;
 				var powerTextY = y + height/2;
@@ -166,8 +168,8 @@ function round(value, decimals) {
 			shape: "polygon",
 			points: [{x: 0.5, y: -1}, {x: 1, y: 0}, {x: 0, y: 0}],
 			//radius: .3,
-			density: ROCKET_DENSITY,
-			$mass: ROCKET_DENSITY * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
+			density: level.rocket.density,
+			$mass: level.rocket.density * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
 			x:35,
 			y:36,
 			$thrown:true,
@@ -214,5 +216,5 @@ function round(value, decimals) {
 		});
 	};
 
-	createNewLevel();
+	createNewLevel(currentLevel);
 })()
