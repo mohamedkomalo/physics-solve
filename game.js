@@ -34,7 +34,7 @@ function round(value, decimals) {
 	var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 69 });
 	var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 49 });
 
-	var BALLOON_SPEED = 5;
+	var BALLOON_SPEED = 20;
 	var BALLOON_DIRECTION = 90;
 
 
@@ -42,8 +42,12 @@ function round(value, decimals) {
 		var pos = this.position();
 		//console.log(pos);
 		context.font="11px Verdana";
+		context.fillStyle="black";
 		context.fillText("(" + parseInt(pos.x) + "," + parseInt(pos.y) + ")", pos.x * GAME_SCALE, pos.y * GAME_SCALE);
-		context.fillText("mass: " + round(this.$mass, 2), (pos.x + 5) * GAME_SCALE, pos.y * GAME_SCALE);
+		context.fillText("mass: " + round(this.$mass, 2) + " kg", (pos.x + 5) * GAME_SCALE, pos.y * GAME_SCALE);
+
+		if(this.$speed)
+			context.fillText("speed: " + this.$speed+ " m/s", (pos.x + 5) * GAME_SCALE, (pos.y + 1) * GAME_SCALE);
 	}
 
 	var ballon = world.createEntity({
@@ -53,8 +57,9 @@ function round(value, decimals) {
 		density: 2,
 		$mass: 2 * ((22 / 7) * (.3 * .3)),
 		x: 2,
-		y: 5,
+		y: 10,
 		$fellOff: false,
+		$speed: BALLOON_SPEED,
 		onRender: renderEntityPositionFunction,
 		onStartContact: function(entity){
 			if(entity.name() == "boundary" && this.$fellOff === false){
@@ -75,7 +80,8 @@ function round(value, decimals) {
 	ballon.setForce( "moving", ballon.$mass * GAME_GRAVITY, 0 );
 	ballon.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
 	
-	var MAX_FORCE = 10;
+	var MAX_FORCE = 40;
+	var MIN_FORCE = 2;
 
 	var thrower = world.createEntity({
 		name: "thrower",
@@ -83,7 +89,7 @@ function round(value, decimals) {
 		color: "black",
 		width: 2,
 		height: 7,
-		x: 30,
+		x: 35.5,
 		y: 48,
 		$force:MAX_FORCE,
 		onKeydown: function(event){
@@ -94,7 +100,7 @@ function round(value, decimals) {
 				}
 			}
 			
-			if(this.$force > 1){
+			if(this.$force > MIN_FORCE){
 				if(event.keyCode === 40){ //DOWN
 					this.$force -= 1;
 				}
@@ -124,14 +130,23 @@ function round(value, decimals) {
 
 	nailTemplate = {
 		name: "nail", 
-		shape: "circle", 
-		radius: .3,
-		density: 2,
-		$mass: 2 * ((22 / 7) * (.3 * .3)),
-		x:30,
+		shape: "polygon",
+		points: [{x: 0.5, y: -1}, {x: 1, y: 0}, {x: 0, y: 0}],
+		//radius: .3,
+		density: .4,
+		$mass: .4 * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
+		x:35,
 		y:36,
 		$thrown:true,
-		onRender: renderEntityPositionFunction,
+		onRender: function(context){
+			renderEntityPositionFunction.call(this, context);
+			if(this.$thrown){
+				this.color("red");
+			}
+			else{
+				this.color("black");	
+			}
+		},
 		onKeydown: function(event){
 			if(event.keyCode === 32){
 				if(this.$thrown === false){
@@ -165,6 +180,7 @@ function round(value, decimals) {
 		var t = failTrials > -1 ? failTrials : 0;
 		context.fillText("Failed Trials: " + t, 22, 10);
 	});
+
 
 	//nail.applyImpulse(132, 0);
 	//nail.setVelocity("to kill", 12.5, 0);
