@@ -1,8 +1,15 @@
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 (function(){
 	var GAME_SIZE = {width:700, height: 500};
 	var GAME_SCALE = 10;
+	var GAME_GRAVITY = 9.8;
 
 	var canvas = document.getElementById('game');
+	var failTrials = -1;
+
 	//var context = canvas.getContext('2d');
 
 	canvas.width = GAME_SIZE.width;
@@ -10,7 +17,7 @@
 
 	var world = boxbox.createWorld(canvas, {
 		scale: GAME_SCALE,
-		gravity: {x:0, y:9.8}
+		gravity: {x:0, y:GAME_GRAVITY}
 	});
 
 	var boundaryTemplate = {
@@ -27,14 +34,16 @@
 	var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 69 });
 	var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 49 });
 
-	var BALLOON_SPEED = 10;
+	var BALLOON_SPEED = 5;
 	var BALLOON_DIRECTION = 90;
 
 
 	var renderEntityPositionFunction = function(context){
 		var pos = this.position();
 		//console.log(pos);
+		context.font="11px Verdana";
 		context.fillText("(" + parseInt(pos.x) + "," + parseInt(pos.y) + ")", pos.x * GAME_SCALE, pos.y * GAME_SCALE);
+		context.fillText("mass: " + round(this.$mass, 2), (pos.x + 5) * GAME_SCALE, pos.y * GAME_SCALE);
 	}
 
 	var ballon = world.createEntity({
@@ -63,10 +72,10 @@
 		}
 	});
 
-	ballon.setForce( "moving", ballon.$mass * 9.8, 0 );
+	ballon.setForce( "moving", ballon.$mass * GAME_GRAVITY, 0 );
 	ballon.setVelocity( "moving", BALLOON_SPEED, BALLOON_DIRECTION);
 	
-	var MAX_FORCE = 40;
+	var MAX_FORCE = 10;
 
 	var thrower = world.createEntity({
 		name: "thrower",
@@ -78,6 +87,7 @@
 		y: 48,
 		$force:MAX_FORCE,
 		onKeydown: function(event){
+			console.log(event);
 			if(this.$force < MAX_FORCE){
 				if(event.keyCode === 38){ //UP
 					this.$force += 1;
@@ -119,13 +129,14 @@
 		density: 2,
 		$mass: 2 * ((22 / 7) * (.3 * .3)),
 		x:30,
-		y:30,
-		$thrown:false,
+		y:36,
+		$thrown:true,
 		onRender: renderEntityPositionFunction,
 		onKeydown: function(event){
 			if(event.keyCode === 32){
 				if(this.$thrown === false){
-					this.applyImpulse(thrower.$force, 0);
+					console.log(thrower.$force);
+					this.setForce("upward", thrower.$force, 0);
 					this.$thrown = true;
 				}
 			}
@@ -134,6 +145,8 @@
 			if(entity.name() === "thrower"){
 				this.$thrown = false;
 			}
+			failTrials++;
+			console.log(failTrials);
 		}
 	};
 
@@ -144,6 +157,13 @@
 			nail.destroy()
 			nail = world.createEntity(nailTemplate);
 		}
+	});
+
+	world.onRender(function(context){
+		context.fillStyle = "black";
+		context.font="13px Verdana";
+		var t = failTrials > -1 ? failTrials : 0;
+		context.fillText("Failed Trials: " + t, 22, 10);
 	});
 
 	//nail.applyImpulse(132, 0);
