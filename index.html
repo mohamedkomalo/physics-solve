@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
 	<style>
 		body {
 		  padding-top: 40px;
@@ -32,12 +35,40 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-4">
-				<div class="panel panel-info">
-					<div class="panel-heading">
-							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ></span> About
-					</div>
-					<div class="panel-body">
-						nice game description here
+				<div id="accordion">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+								<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ></span> About
+							</a>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse">
+							<div class="panel-body">
+								<p>
+									This game was created in Koding.com Hacathon. It is just a very basic demo of our idea.
+								</p>
+
+								<p>
+									Physics games are fun and beneifial, but the problem is that most (if not all) rely on approximating the result in order to solve the game. For example, in Angry Birds players try to approximate the best angle and power to throw the bird with. In addition, during playing Angry Birds, players doesn't know anything about the physiscs concepts they apply when approximating the angle and power of the throw.
+								</p>
+
+								<p>
+									However, explaining the phyicis concept with the help of angry birds will be easier, since players already have thought and tried to approximate the solution of the game.
+								</p>
+
+								<p>
+									So why not combining both ? what if physics games were like any other games that is played because it is fun and challenging, but part of the game would be about explaining the concept and how we can calculate a near optimal solution and also provide data for calculating this solution and trying it in the game.
+								</p>
+
+								<p>
+									Here we illustrate a simple physics problem through a game where there flying objects with velocity, we need to fire a rocket with force F at a certain time to hit a specific flying object.
+								</p>
+
+								<p>
+									There are 3 levels, although 1 level is enough with 1 object to explain, they are made just for the sake of fun in the game.
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -63,7 +94,7 @@
 				<div class="alert alert-info" role="alert">
 					Created by <a href="https://github.com/mohamedkomalo">Mohamed Kamal Kamaly</a> and <a href="https://github.com/ayahmohiy">Aya Mohiy El-Deen</a>
 				</div>
-				
+
 			</div>
 
 			<div class="col-lg-8">
