@@ -209,11 +209,11 @@ function round(value, decimals) {
 			density: level.rocket.density,
 			$mass: level.rocket.density * 0.5 * 1 * 1,//2 * ((22 / 7) * (.3 * .3)),
 			x:35,
-			y:36,
-			$thrown:true,
+			y:43,
+			$moving:true,
 			onRender: function(context){
 				renderEntityPositionFunction.call(this, context);
-				if(this.$thrown){
+				if(this.$moving){
 					this.color("lightblue");
 				}
 				else{
@@ -222,15 +222,15 @@ function round(value, decimals) {
 			},
 			onKeydown: function(event){
 				if(event.keyCode === KEYCODES_SPACE){
-					if(this.$thrown === false){
+					if(this.$moving === false){
 						this.setForce("upward", forceController.$force, 0);
-						this.$thrown = true;
+						this.$moving = true;
 					}
 				}
 			},
 			onStartContact: function(entity){
 				if(entity.name() === "boundary"){
-					this.$thrown = false;
+					this.$moving = false;
 				}
 				failTrials++;
 			}
