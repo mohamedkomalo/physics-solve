@@ -147,11 +147,12 @@ function round(value, decimals) {
 		var forceController = world.createEntity({
 			name: "forceController",
 			shape: "square",
+			type: "static",
 			color: "lightblue",
 			width: 2,
 			height: 7,
-			x: 35.5,
-			y: 48,
+			x: 1.5,
+			y: 46,
 			$force:level.rocket.maxForce,
 			onKeydown: function(event){
 				if(event.keyCode === KEYCODES_ARROWS_UP){ //UP
@@ -228,7 +229,7 @@ function round(value, decimals) {
 				}
 			},
 			onStartContact: function(entity){
-				if(entity.name() === "forceController"){
+				if(entity.name() === "boundary"){
 					this.$thrown = false;
 				}
 				failTrials++;
