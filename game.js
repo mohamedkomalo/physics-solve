@@ -83,9 +83,9 @@ function round(value, decimals) {
 			height:GAME_SIZE.height
 		};
 
-		var leftBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 1 });
-		var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 69 });
-		var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 49 });
+		var leftBoundary = world.createEntity(boundaryTemplate, { width: 2, x: -0.5 });
+		var rightBoundary = world.createEntity(boundaryTemplate, { width: 2, x: 70.5 });
+		var bottomBoundary = world.createEntity(boundaryTemplate, { height: 2, y: 50.5 });
 
 		var renderEntityPositionFunction = function(context){
 			var pos = this.position();
