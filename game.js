@@ -6,7 +6,7 @@ function round(value, decimals) {
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
-(function(){
+var GameController = (function(){
 	var GAME_SIZE = {width:700, height: 500};
 	var GAME_SCALE = 10;
 	var GAME_GRAVITY = 9.8;
@@ -53,7 +53,7 @@ function round(value, decimals) {
 
 	var nextLevelIndex = 0;
 	
-	var failTrials = -1;
+	var failTrials = 0;
 	var startTime = new Date().getTime();
 	var endTime;
 
@@ -232,7 +232,6 @@ function round(value, decimals) {
 				if(entity.name() === "boundary"){
 					this.$moving = false;
 				}
-				failTrials++;
 			}
 		};
 
@@ -241,6 +240,7 @@ function round(value, decimals) {
 		world.onTick(function(){
 			if(rocket.position().y < -2){
 				rocket.destroy()
+				failTrials++;
 				rocket = world.createEntity(rocketTemplate);
 			}
 
@@ -324,5 +324,12 @@ function round(value, decimals) {
 	}
 
 	moveToNextLevel();
+	
+	world.pause();
 
-})()
+	return {
+		startGame: function(){
+			world.pause();
+		}
+	};
+})();
