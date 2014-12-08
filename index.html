@@ -119,6 +119,65 @@
 						}
 					</script>
 					<button id="startGame" onclick="OnStartGameClicked()" class="btn btn-primary">Start Game</button>
+					<p>     </p>
+
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+					  How to Solve
+					</button>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					      </div>
+					      <div class="modal-body">
+					        <p>
+							What we want to know is what force we will set the engine of the rocket, and when we will power up the engine so that it hits the target.
+								F = m a
+							</p>
+
+							<p>
+							since mass of the rocket is given in the game 0.2kg, what we need to find is the acceleration.
+							we can find it using kinematic equations:
+								s = vo t + 1/2 a t^2
+							</p>
+
+							<p>
+							well let's see, suppose that the object you to hit is at (x1, y1) and the rocket is at (x2, y2) then the point at which they meet will be (x2, y1)
+							</p>
+
+							<p>
+							so when will the the target will arrive at this point, we already know at what speed it is moving
+							t= d/v =>  (x2-x1) / velocity of object
+							</p>
+
+							<p>
+							Now we know the object will be at the hitting point at time t, we would to be at this point also, so we want to move s = (y2-y1) , now we have s
+							</p>
+
+							<p>
+							we can substitute in the equation
+							s = vo t + 1/2 a t^2
+							</p>
+
+							<p>
+							but take care you are going aganist the gravity, so the equation will be
+							s = vo t + 1/2 (a-g) t^2
+
+							then get a and calculate F = m * a
+							</p>
+
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+
 				</div>
 			</div>
 		</div>
