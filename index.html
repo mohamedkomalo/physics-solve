@@ -4,24 +4,75 @@
 	<title></title>
 	<script src="Box2dWeb-2.1.a.3.min.js"></script>
 	<script src="boxbox.min.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
 	<style>
+		body {
+		  padding-top: 40px;
+		}
 		.centered {
 		  position: fixed;
 		  top: 50%;
 		  left: 50%;
 		  transform: translate(-50%, -50%);
 		}
+		canvas{
+			box-shadow: 0 0 15px #888888;
+			background-color: white;
+		}
+		body{
+  			background: linear-gradient(white, rgb(224, 240, 245)); /* Standard syntax */
+		}
 	</style>
 </head>
 
 <body>
-	<div class="centered">
-		<canvas id="game" >
-			Browser must support html5 canvas
-		</canvas>
-		<p>
-			Press up/down to increase/decrease force, press with Ctrl to increase/decrease decimal
-		</p>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ></span> About
+					</div>
+					<div class="panel-body">
+						nice game description here
+					</div>
+				</div>
+
+				<div class="panel panel-info">
+					<div class="panel-heading">
+							<span class="glyphicon glyphicon-screenshot" aria-hidden="true" ></span> Game Instructions
+					</div>
+					<div class="panel-body">
+						<ul class="list-unstyled">
+							<li>
+								- Up/down arrow keys increase/decrease force by 1N
+							</li>
+							<li>
+								- Press with Ctrl to increase/decrease decimal by 0.1N
+							</li>
+							<li>
+								- Press space to powerup the rocket engine with the force chosen
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="alert alert-info" role="alert">
+					Created by <a href="https://github.com/mohamedkomalo">Mohamed Kamal Kamaly</a> and <a href="https://github.com/ayahmohiy">Aya Mohiy El-Deen</a>
+				</div>
+				
+			</div>
+
+			<div class="col-lg-8">
+				<canvas id="game" >
+					Browser must support html5 canvas
+				</canvas>
+			</div>
+		</div>
+
 	</div>
 	<script src="game.js"></script>
 </body>

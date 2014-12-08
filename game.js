@@ -76,7 +76,7 @@ function round(value, decimals) {
 		var boundaryTemplate = {
 			name: "boundary",
 			shape: "square",
-			color: "lightblue",
+			color: "transparent",
 			borderColor: "transparent",
 			type: "static",
 			width:GAME_SIZE.width,
@@ -258,7 +258,13 @@ function round(value, decimals) {
 			var trials = getFailTrials();
 			var elapsedTime = getElapsedTime();
 
-			context.fillText("Time Elapsed: " + elapsedTime + ", Failed Trials: " + trials + ", Level " + nextLevelIndex + ": " + level.name, 22, 10);
+			context.fillStyle="darkgrey";
+
+			var infoX = 5;
+			var infoY = 14;
+			context.fillText("Time Elapsed: " + elapsedTime, infoX, infoY);
+			context.fillText("Failed Trials: " + trials, infoX, infoY + 20);
+			context.fillText("Level " + nextLevelIndex + ": " + level.name, infoX, infoY + 40);
 
 			if(GAME_END){
 				context.fillStyle="rgba(0,0,0,0.7)";
