@@ -144,8 +144,8 @@ function round(value, decimals) {
 			})
 		}
 
-		var launcher = world.createEntity({
-			name: "launcher",
+		var forceController = world.createEntity({
+			name: "forceController",
 			shape: "square",
 			color: "lightblue",
 			width: 2,
@@ -222,13 +222,13 @@ function round(value, decimals) {
 			onKeydown: function(event){
 				if(event.keyCode === KEYCODES_SPACE){
 					if(this.$thrown === false){
-						this.setForce("upward", launcher.$force, 0);
+						this.setForce("upward", forceController.$force, 0);
 						this.$thrown = true;
 					}
 				}
 			},
 			onStartContact: function(entity){
-				if(entity.name() === "launcher"){
+				if(entity.name() === "forceController"){
 					this.$thrown = false;
 				}
 				failTrials++;
