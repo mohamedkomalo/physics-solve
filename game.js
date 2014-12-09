@@ -49,6 +49,23 @@ var GameController = (function(){
 			minForce: 2,
 			density: .4
 		}
+	},
+	{
+		name: "Craza - Crazy level",
+		targets: [
+		{negative: false, speed:10, direction: -90, x: 12, y:10, radius: .3},
+		{negative: true, speed:40, direction: 90, x: 13, y:14, radius: .9},
+		{negative: true, speed:30, direction: -90, x: 40, y:17, radius: .8},
+		{negative: true, speed:50, direction: 90, x: 13, y:20, radius: .9},
+		{negative: true, speed:30, direction: -90, x: 40, y:22, radius: .8},
+		{negative: true, speed:60, direction: 90, x: 13, y:25, radius: .7},
+		{negative: true, speed:120, direction: -90, x: 40, y:29, radius: 1}
+		],
+		rocket: {
+			maxForce: 30,
+			minForce: 2,
+			density: .4
+		}
 	}];
 
 	var nextLevelIndex = 0;
