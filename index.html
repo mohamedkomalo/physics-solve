@@ -136,39 +136,57 @@
 					      </div>
 					      <div class="modal-body">
 					        <p>
-							What we want to know is what force we will set the engine of the rocket, and when we will power up the engine so that it hits the target.
-								F = m a
-							</p>
+								What we want to know is what force to set in the engine of the rocket, and when we will power up the engine so that it hits the target. <br>
 
+								Let's start thinking about the force, well F = m a <br>
+								So we need the mass and acceleration, Since mass of the rocket is given in the game 0.2kg, what we need to find is the acceleration.<br>
+								
 							<p>
-							since mass of the rocket is given in the game 0.2kg, what we need to find is the acceleration.
-							we can find it using kinematic equations:
+								we can find it using kinematic equation:
 								s = vo t + 1/2 a t^2
 							</p>
 
 							<p>
-							well let's see, suppose that the object you to hit is at (x1, y1) and the rocket is at (x2, y2) then the point at which they meet will be (x2, y1)
+								well let's see, suppose that the object you to hit is at (x1, y1) and the rocket is at (x2, y2) then the point at which they meet will be (x2, y1). See the example in the image.
+							</p>
+
+							<a href="hitpoint.png" target="_blank">
+								<img src="hitpoint.png" width=400 style="display: block;margin-left: auto;margin-right: auto; margin-bottom:10px" />
+							</a>
+
+							<p>
+								We need to know when when will the the target arrive at this point, we already know at what speed it is moving.
 							</p>
 
 							<p>
-							so when will the the target will arrive at this point, we already know at what speed it is moving
-							t= d/v =>  (x2-x1) / velocity of object
+								t= d/v =>  (x2-x1) / velocity of object
+							</p>
+
+								NB: if it was moving in the oposite direction the velocity would be negative
 							</p>
 
 							<p>
-							Now we know the object will be at the hitting point at time t, we would to be at this point also, so we want to move s = (y2-y1) , now we have s
+								Now we know the object will be at the hitting point at time t, we want to be at this point at time t also to hit it, so we want to move from our position to the hit point s = (y2-y1) , now we have s
 							</p>
 
 							<p>
-							we can substitute in the equation
-							s = vo t + 1/2 a t^2
+								we can substitute in the equation
+								s = vo t + 1/2 a t^2
 							</p>
 
 							<p>
-							but take care you are going aganist the gravity, so the equation will be
-							s = vo t + 1/2 (a-g) t^2
+								but take care that the rocket are going aganist the gravity, so the equation will be
+							</p>
+								s = vo t + 1/2 (a-g) t^2<br>
+								then get a and calculate F = ma
+							</p>
 
-							then get a and calculate F = m * a
+							<p>
+								Now we need to set the rocket's force to F, we need to fire when the flying object be at (x1, y1)
+							</p>
+
+							<p>
+								Now choose a point and try to solve it then try it in the game, notice that you still need to be accurate to fire at the moment that object is at (x1, y1) not before or after it.
 							</p>
 
 					      </div>
