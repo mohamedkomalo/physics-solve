@@ -54,7 +54,7 @@ var GameController = (function(){
 	var nextLevelIndex = 0;
 	
 	var failTrials = 0;
-	var startTime = new Date().getTime();
+	var startTime;
 	var endTime;
 
 	var canvas = document.getElementById('game');
@@ -304,6 +304,8 @@ var GameController = (function(){
 	}
 
 	function getElapsedTime(){
+		if(!startTime)
+			return "00:00";
 		var myEnd = endTime;
 		if(!myEnd){
 			myEnd = new Date().getTime();
@@ -329,6 +331,7 @@ var GameController = (function(){
 
 	return {
 		startGame: function(){
+			startTime = new Date().getTime();
 			world.pause();
 		}
 	};
