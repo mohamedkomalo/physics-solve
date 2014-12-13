@@ -96,6 +96,27 @@
 						</ul>
 					</div>
 				</div>
+				<div class="alert alert-info">
+						<script>
+							function OnStartGameClicked(){
+								console.log("AAA");
+								$("#startGame").attr('disabled','disabled');
+								GameController.startGame();
+							}
+						</script>
+						
+						<div style="text-align:center;">
+							<div class="btn-group">
+								<button id="startGame" onclick="OnStartGameClicked()" class="btn btn-primary">Start Game</button>
+							</div>
+							<!-- Button trigger modal -->
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+								  How to calculate it
+								</button>
+							</div>
+						</div>
+				</div>
 
 				<div class="alert alert-info" role="alert">
 					Created by <a href="https://github.com/mohamedkomalo">Mohamed Kamal Kamaly</a> and <a href="https://github.com/ayahmohiy">Aya Mohiy El-Deen</a> during <a href="http://Koding.com/Hackathon">Koding.com/Hackathon</a>
@@ -104,32 +125,13 @@
 			</div>
 
 			<div class="col-lg-8">
+
 				<canvas id="game" >
 					Browser must support html5 canvas
 				</canvas>
 				
 				<script src="game.js"></script>
 
-				<div class="col-sm-offset-5">
-					<script>
-						function OnStartGameClicked(){
-							console.log("AAA");
-							$("#startGame").attr('disabled','disabled');
-							GameController.startGame();
-						}
-					</script>
-					
-					<div>
-						<div class="btn-group">
-							<button id="startGame" onclick="OnStartGameClicked()" class="btn btn-primary">Start Game</button>
-						</div>
-						<!-- Button trigger modal -->
-						<div class="btn-group">
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-							  How to calculate it
-							</button>
-						</div>
-					</div>
 
 					<!-- Modal -->
 					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -201,7 +203,7 @@
 					  </div>
 					</div>
 
-				</div>
+				
 			</div>
 		</div>
 
