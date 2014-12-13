@@ -13,7 +13,7 @@
 
 	<style>
 		body {
-		  padding-top: 40px;
+		  padding-top: 5px;
 		}
 		.centered {
 		  position: fixed;
@@ -118,13 +118,18 @@
 							GameController.startGame();
 						}
 					</script>
-					<button id="startGame" onclick="OnStartGameClicked()" class="btn btn-primary">Start Game</button>
-					<p>     </p>
-
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-					  How to calculate it
-					</button>
+					
+					<div>
+						<div class="btn-group">
+							<button id="startGame" onclick="OnStartGameClicked()" class="btn btn-primary">Start Game</button>
+						</div>
+						<!-- Button trigger modal -->
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+							  How to calculate it
+							</button>
+						</div>
+					</div>
 
 					<!-- Modal -->
 					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
